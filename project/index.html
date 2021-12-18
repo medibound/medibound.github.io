@@ -18,14 +18,14 @@
 	<meta property="og:url" content="https://medibound.com/project/">
 	<meta property="og:site_name" content="medibound">
 	<meta property="article:publisher" content="https://www.facebook.com/medibound">
-	<meta property="article:modified_time" content="2021-12-15T12:30:00+00:00">
+	<meta property="article:modified_time" content="2021-12-18T09:36:57+00:00">
 	<meta property="og:image" content="https://medibound.com/wp-content/uploads/2021/11/nfc-data.png">
 	<meta property="og:image:width" content="1425">
 	<meta property="og:image:height" content="948">
 	<meta name="twitter:card" content="summary_large_image">
 	<meta name="twitter:site" content="@medibound">
 	<meta name="twitter:label1" content="Est. reading time">
-	<meta name="twitter:data1" content="1 minute">
+	<meta name="twitter:data1" content="3 minutes">
 	<script type="application/ld+json" class="yoast-schema-graph">{
 	    "@context": "https://schema.org",
 	    "@graph": [
@@ -84,7 +84,7 @@
 	                "@id": "https://medibound.com/#website"
 	            },
 	            "datePublished": "2021-12-12T07:05:52+00:00",
-	            "dateModified": "2021-12-15T12:30:00+00:00",
+	            "dateModified": "2021-12-18T09:36:57+00:00",
 	            "description": "A mobile app dedicated to advancing and progressing the health statistics.",
 	            "breadcrumb": {
 	                "@id": "https://medibound.com/project/#breadcrumb"
@@ -148,7 +148,7 @@ img.emoji {
 <style id="elementor-frontend-inline-css">@font-face{font-family:eicons;src:url(https://medibound.com/wp-content/plugins/elementor/assets/lib/eicons/fonts/eicons.eot?5.10.0);src:url(https://medibound.com/wp-content/plugins/elementor/assets/lib/eicons/fonts/eicons.eot?5.10.0#iefix) format("embedded-opentype"),url(https://medibound.com/wp-content/plugins/elementor/assets/lib/eicons/fonts/eicons.woff2?5.10.0) format("woff2"),url(https://medibound.com/wp-content/plugins/elementor/assets/lib/eicons/fonts/eicons.woff?5.10.0) format("woff"),url(https://medibound.com/wp-content/plugins/elementor/assets/lib/eicons/fonts/eicons.ttf?5.10.0) format("truetype"),url(https://medibound.com/wp-content/plugins/elementor/assets/lib/eicons/fonts/eicons.svg?5.10.0#eicon) format("svg");font-weight:400;font-style:normal}</style>
 <link rel="stylesheet" id="elementor-post-5-css" href="https://medibound.com/wp-content/uploads/elementor/css/post-5.css?ver=1630819886" media="all">
 <link rel="stylesheet" id="elementor-global-css" href="https://medibound.com/wp-content/uploads/elementor/css/global.css?ver=1630821963" media="all">
-<link rel="stylesheet" id="elementor-post-864-css" href="https://medibound.com/wp-content/uploads/elementor/css/post-864.css?ver=1639351521" media="all">
+<link rel="stylesheet" id="elementor-post-864-css" href="https://medibound.com/wp-content/uploads/elementor/css/post-864.css?ver=1639820225" media="all">
 <link rel="stylesheet" id="google-fonts-1-css" href="https://fonts.googleapis.com/css?family=Roboto%3A100%2C100italic%2C200%2C200italic%2C300%2C300italic%2C400%2C400italic%2C500%2C500italic%2C600%2C600italic%2C700%2C700italic%2C800%2C800italic%2C900%2C900italic%7CRoboto+Slab%3A100%2C100italic%2C200%2C200italic%2C300%2C300italic%2C400%2C400italic%2C500%2C500italic%2C600%2C600italic%2C700%2C700italic%2C800%2C800italic%2C900%2C900italic&#038;display=auto&#038;ver=5.8" media="all">
 <link rel="stylesheet" id="elementor-icons-shared-0-css" href="https://medibound.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/fontawesome.min.css?ver=5.15.3" media="all">
 <link rel="stylesheet" id="elementor-icons-fa-solid-css" href="https://medibound.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/solid.min.css?ver=5.15.3" media="all">
@@ -224,6 +224,9 @@ body {
 
 .main-header-menu .menu-item > .menu-link{
 	margin-right: 10px;
+}
+button:disabled {
+	color: #444444;
 }</style>
 		</head>
 
@@ -407,45 +410,282 @@ body {
             }
             #button:hover {
                 color: black
+            }
+            #loading-1 {
+            }
+            #loading-2 {
+                transition: width 0.5s;
+            }
+            @media screen and (max-width: 900px) {
+                #content {
+                    flex-direction: column !important;
+                }
+                .column {
+                    width: 100% !important
+                }
             }</style>
+        <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.min.js"></script>
+        <script src="https://unpkg.com/ml5@0.4.3/dist/ml5.min.js"></script>
+        <script>
+            let video;
+            let features;
+            let knn;
+            let labelP;
+            let ready = false;
+            let x;
+            let y;
+            let label = 'nothing';
+
+            function setup() {
+                features = ml5.featureExtractor('MobileNet', modelReady);
+                knn = ml5.KNNClassifier();
+                x = width / 2;
+                y = height / 2;
+            }
+
+            function goClassify() {
+                const logits = features.infer(video);
+            
+                knn.classify(logits, function(error, result) {
+                    if (error) {
+                    console.error(error);
+                    } else {
+                    label = result.label;
+                    labelP.html(result.label);
+                    goClassify();
+                    }
+                });
+            }
+
+            function keyPressed() {
+                const logits = features.infer(video);
+                if (key == 'l') {
+                    knn.addExample(logits, 'left');
+                    console.log('left');
+                } else if (key == 'r') {
+                    knn.addExample(logits, 'right');
+                    console.log('right');
+                } else if (key == 'u') {
+                    knn.addExample(logits, 'up');
+                    console.log('up');
+                } else if (key == 'd') {
+                    knn.addExample(logits, 'down');
+                    console.log('down');
+                } else if (key == 's') {
+                    save(knn, 'model.json');
+                    //knn.save('model.json');
+                }
+            }
+
+            function modelReady() {
+                console.log('model ready!');
+                // Comment back in to load your own model!
+                // knn.load('model.json', function() {
+                //   console.log('knn loaded');
+                // });
+            }
+
+
+            // Temporary save code until ml5 version 0.2.2
+            const save = (knn, name) => {
+            const dataset = knn.knnClassifier.getClassifierDataset();
+            if (knn.mapStringToIndex.length > 0) {
+                Object.keys(dataset).forEach(key => {
+                if (knn.mapStringToIndex[key]) {
+                    dataset[key].label = knn.mapStringToIndex[key];
+                }
+                });
+            }
+            const tensors = Object.keys(dataset).map(key => {
+                const t = dataset[key];
+                if (t) {
+                return t.dataSync();
+                }
+                return null;
+            });
+            let fileName = 'myKNN.json';
+            if (name) {
+                fileName = name.endsWith('.json') ? name : `${name}.json`;
+            }
+            saveFile(fileName, JSON.stringify({ dataset, tensors }));
+            };
+
+            const saveFile = (name, data) => {
+                const downloadElt = document.createElement('a');
+                const blob = new Blob([data], { type: 'octet/stream' });
+                const url = URL.createObjectURL(blob);
+                downloadElt.setAttribute('href', url);
+                downloadElt.setAttribute('download', name);
+                downloadElt.style.display = 'none';
+                document.body.appendChild(downloadElt);
+                downloadElt.click();
+                document.body.removeChild(downloadElt);
+                URL.revokeObjectURL(url);
+            };
+            
+            const input = document.getElementsByClassName('bar')
+            const train = document.getElementById('train');
+
+            function run() {
+                console.log(input.length)
+                
+                reset();
+                numImages();
+                knn = ml5.KNNClassifier();
+                features = ml5.featureExtractor('MobileNet', previewImages);
+            }
+
+            function saveKNN () {
+                save(knn, 'knn-model.json');
+            }
+
+            function reset () {
+                document.getElementById('knn-button').style.display = "none";
+                document.getElementById('loading-1').style.width = "0%";
+                const p1 = document.getElementById('percentage-1');
+                p1.innerHTML = "0/0"
+                document.getElementById('train').innerHTML = "TRAIN"
+                document.getElementById('train').disabled = false;
+            }
+
+            var numImage;
+            var filledImages;
+
+            function numImages() {
+                document.getElementById('train').innerHTML = "TRAINING...";
+                document.getElementById('train').disabled = true;
+                const input = document.getElementsByClassName('bar')
+                numImage = 0;
+
+                for(var j = 0; j < input.length; j++) {
+                    console.log("working")
+                    if (input[j].files) {
+                    [].forEach.call(input[j].files, (file) => {
+                        if (!/\.(jpe?g|png|gif)$/i.test(file.name)) {
+                            return alert(file.name + " is not an image");
+                        } else {
+                            numImage++;
+                        }
+                    });
+                    
+                    }
+                }
+            }
+
+
+            function previewImages() {
+
+                const input = document.getElementsByClassName('bar')
+                const preview = document.getElementById('preview')
+
+                const choices = ["0","1","2","3","4"];
+                filledImages = 0;
+
+                for(var j = 0; j < input.length; j++) {
+                    console.log("working")
+                    if (input[j].files) {
+                    [].forEach.call(input[j].files, readAndPreview);
+                    
+                    } 
+                    if (numImage == 0) {
+                        document.getElementById('train').innerHTML = "TRAIN";
+                        document.getElementById('train').disabled = false;
+                    }
+                }
+
+                function readAndPreview(file) {
+
+                // Make sure `file.name` matches our extensions criteria
+                if (!/\.(jpe?g|png|gif)$/i.test(file.name)) {
+                    return ;
+                } // else...
+                
+                var reader = new FileReader();
+                
+                const num = j;
+
+                const loading1 = document.getElementById('loading-1');
+                const p1 = document.getElementById('percentage-1');
+                p1.innerHTML = "0/0"
+
+
+                reader.addEventListener("load", function() {
+                    var image = new Image();
+                    image.height = 250;
+                    image.width = 250;
+                    image.title  = file.name;
+                    image.src    = this.result;
+                    image.onload = () => {
+                        const logits = features.infer(image);
+                        knn.addExample(logits,choices[num]);
+                        console.log(num);
+                        filledImages++;
+                        console.log(numImage)
+                        var percentage = filledImages/numImage * 100;
+                        var percentString = percentage + "%"
+                        console.log(percentString)
+                        loading1.style.width = percentString;
+                        p1.innerHTML = filledImages + "/" + numImage;
+                        if (percentage == 100) {
+                            document.getElementById('knn-button').style.display = "block";
+                            const train = document.getElementById('train');
+                            document.getElementById('train').innerHTML = "TRAIN";
+                            document.getElementById('train').disabled = false;
+                        }
+
+                    };
+                });
+                
+                reader.readAsDataURL(file);
+                
+                }
+
+            }
+
+
+        </script>
     
     
-        <div style=" height: 100%; width: 100%;  display: flex">
-            <div style="width: 50%; padding:5px;">
+        <div id="content" style=" height: 100%; width: 100%;  display: flex; flex-direction: row;">
+            <div class="column" style="width: 50%; padding:5px;">
                 <div id="bar">
-<span>No Present Diabetic Retinopathy</span> <div> <input type="file" id="files" name="files" multiple>
-</div>
-</div>
-                <div id="bar">
-<span>Mild Diabetic Retinopathy</span> <div> <input type="file" id="files" name="files" multiple>
+<span>No Present Diabetic Retinopathy</span> <div> <input class="bar" type="file" id="files" name="files" multiple>
 </div>
 </div>
                 <div id="bar">
-<span>Moderate Diabetic Retinopathy</span> <div> <input type="file" id="files" name="files" multiple>
+<span>Mild Diabetic Retinopathy</span> <div> <input class="bar" type="file" id="files" name="files" multiple>
 </div>
 </div>
                 <div id="bar">
-<span>Severe Diabetic Retinopathy</span> <div><input type="file" id="files" name="files" multiple></div>
+<span>Moderate Diabetic Retinopathy</span> <div> <input class="bar" type="file" id="files" name="files" multiple>
+</div>
 </div>
                 <div id="bar">
-<span>Proliferative Diabetic Retinopathy</span> <div> <input type="file" id="files" name="files" multiple>
+<span>Severe Diabetic Retinopathy</span> <div><input class="bar" type="file" id="files" name="files" multiple></div>
+</div>
+                <div id="bar">
+<span>Proliferative Diabetic Retinopathy</span> <div> <input class="bar" type="file" id="files" name="files" multiple>
 </div>
 </div>
             </div>
-            <div style="width: 50%; padding:5px;">
+            <div class="column" style="width: 50%; padding:5px;">
                 <div id="bar" style=" align-items: flex-start; width: 100%; flex-direction: column;">
                     <div id="inner" style="padding-right: 20px;padding-left: 20px; width: 100%; align-items: flex-start;flex-direction: column;">
-                        <h3 style="color: white">Neural Network Training Process:
-                        <h6 style="color: white">K-Nearest Neighbors Training (KNN):</h6>
+                        <h3 style="color: white">Neural Network Training Process:</h3>
+                        <h6 style="color: white; flex-direction: row;">K-Nearest Neighbors Training (KNN): <span id="percentage-1" style="background: #121212; display: inline-flex; width: auto; padding: 7px; margin-left: 10px; border-radius: 10px; font-size: 9px">0/0</span>
+</h6>
                         <div style="height: 10px; border-radius: 10px; margin-bottom: 20px; width: calc(100% - 40px); overflow: hidden; background: #111111">
-                            <div style="background-color: #00d6a1; border-radius: 10px; height: 10px; width: 80%"></div>
+                            <div id="loading-1" style="background-color: #00d6a1; border-radius: 10px; height: 10px; width: 00%"></div>
                         </div>
-                        <h6 style="color: white">Convolutional Neural Network Training (CNN):</h6>
+                        <button id="knn-button" onclick="saveKNN()" style="display: none; width: 49.5%; height: 40px; border-radius: 7.5px; margin:0; padding:0; margin-bottom: 10px;">DOWNLOAD KNN MODEL</button>
+
+                        <h6 style="color: white; flex-direction: row;">Convolutional Neural Network Training (CNN): <span id="percentage-2" style="background: #121212; display: inline-flex; width: auto; padding: 7px; margin-left: 10px; border-radius: 10px; font-size: 9px">0/0</span>
+</h6>
                         <div style="height: 10px; border-radius: 10px; margin-bottom: 20px; width: calc(100% - 40px); overflow: hidden; background: #111111">
-                            <div style="background-color: #00d6a1; border-radius: 10px; height: 10px; width: 80%"></div>
+                            <div id="loading-2" style="background-color: #00d6a1; border-radius: 10px; height: 10px; width: 0%"></div>
                         </div>
-                    </h3>
-</div>
+                        
+                    </div>
                         
                 </div>
                 <div id="bar"><span>KNN Graphical Analysis: N/A</span></div>
@@ -453,9 +693,11 @@ body {
 
 
                 <div style="display: flex; justify-content: space-between;">
-                    <button style="width: 49.5%; height: 40px; border-radius: 7.5px; margin:0; padding:0">TRAIN</button>
-                    <button id="button" style="width: 49.5%; height: 40px;  border-radius: 7.5px;  margin:0; padding:0">RESET</button>
+                    <button onclick="run()" id="train" style="width: 49.5%; height: 40px; border-radius: 7.5px; margin:0; padding:0">TRAIN</button>
+                    <button onclick="reset()" id="button" style="width: 49.5%; height: 40px;  border-radius: 7.5px;  margin:0; padding:0">RESET</button>
                 </div>
+
+                <img id="preview" width="250px">
                 
             </div>
         </div>
