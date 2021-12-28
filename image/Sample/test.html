@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <style>#bar {
+        <style>
+            #bar {
                 color: white; width: 100%; background-color: #1C1C1E; margin-bottom: 10px; border-radius: 5px; display: inline-flex; align-items: center; justify-content: flex-start;
             }
             #bar #inner {
@@ -38,7 +39,8 @@
                 .column {
                     width: 100% !important
                 }
-            }</style>
+            }
+        </style>
         <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.min.js"></script>
         <script src="https://unpkg.com/ml5@0.6.0/dist/ml5.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -200,13 +202,13 @@
 
             /*
             <tr style="padding: 5px">
-                            <th>Trial 1<\/th>
-                            <th>100<\/th>
-                            <th>100<\/th>
-                            <th>100<\/th>
-                            <th>100<\/th>
-                            <th>100<\/th>
-                        <\/tr>
+                            <th>Trial 1</th>
+                            <th>100</th>
+                            <th>100</th>
+                            <th>100</th>
+                            <th>100</th>
+                            <th>100</th>
+                        </tr>
             */
 
             function finalizeAvg(array) {
@@ -227,7 +229,7 @@
                 var newArray = [[],[],[],[],[]];
                 var maxTrials = 0;
                 var finalString = "";
-                finalString += "<table style='width:95%; font-weight: 300; font-size: 13px'><tr style='margin-bottom:10px'><th><\/th><th>No Present DR<\/th><th>Mild DR<\/th><th>Moderate DR<\/th><th>Severe DR<\/th><th>Proliferative DR<\/th><\/tr><tr><th><\/th><\/tr>";
+                finalString += "<table style='width:95%; font-weight: 300; font-size: 13px'><tr style='margin-bottom:10px'><th></th><th>No Present DR</th><th>Mild DR</th><th>Moderate DR</th><th>Severe DR</th><th>Proliferative DR</th></tr><tr><th></th></tr>";
                 for(var i = 0; i < array.length; i++) {
                     if (array[i] != null)  {
                         for (var j = 0; j < array[i].length; j = j+sampleSize) {
@@ -254,9 +256,9 @@
                 }
                 for (var i = 0; i < maxTrials; i++) {
                     var newI = i + 1;
-                    finalString += "<tr style='padding: 5px'><th>Trial " + newI + "<\/th><th>" + newArray[0][i] + "<\/th><th>" + newArray[1][i] + "<\/th><th>" + newArray[2][i] + "<\/th><th>" + newArray[3][i] + "<\/th><th>" + newArray[4][i] + "<\/th><\/tr>";
+                    finalString += "<tr style='padding: 5px'><th>Trial " + newI + "</th><th>" + newArray[0][i] + "</th><th>" + newArray[1][i] + "</th><th>" + newArray[2][i] + "</th><th>" + newArray[3][i] + "</th><th>" + newArray[4][i] + "</th></tr>";
                 }
-                finalString += "<\/table>"
+                finalString += "</table>"
                 console.log(maxTrials);
                 return finalString;
             }
@@ -479,8 +481,8 @@
                 p2.innerHTML = "0/0"
                 document.getElementById('test').innerHTML = "RUN EXPERIMENT"
                 document.getElementById('test').disabled = false;
-                document.getElementsByClassName('knnResultsRight')[0].innerHTML = "<span>KNN Graphical Analysis: N/A<\/span>";
-                document.getElementsByClassName('cnnResultsRight')[0].innerHTML = "<span>CNN Graphical Analysis: N/A<\/span>";
+                document.getElementsByClassName('knnResultsRight')[0].innerHTML = "<span>KNN Graphical Analysis: N/A</span>";
+                document.getElementsByClassName('cnnResultsRight')[0].innerHTML = "<span>CNN Graphical Analysis: N/A</span>";
             }
 
             function numImages() {
@@ -596,11 +598,11 @@
                                 var table = composeTable(knnArrayAvg, trialSampleSize);
 
                                 knnArrayAvg = finalizeAvg(knnArrayAvg);
-                                document.getElementsByClassName('knnResultsRight')[0].innerHTML =  "<h6 style='color: white; margin: 0'>KNN Definite Accuracy:<\/h6><h1 style='color: white; margin: 0; font-size: 75px'>" + results + "<\/h1 ><br/>" + "<h6 style='color: white; margin: 0'>KNN Buffered Accuracy:<\/h6><h1 style='color: white; margin: 0; font-size: 75px'>" + resultsAdjusted + "<\/h1><br/>";
+                                document.getElementsByClassName('knnResultsRight')[0].innerHTML =  "<h6 style='color: white; margin: 0'>KNN Definite Accuracy:</h6><h1 style='color: white; margin: 0; font-size: 75px'>" + results + "</h1 ><br>" + "<h6 style='color: white; margin: 0'>KNN Buffered Accuracy:</h6><h1 style='color: white; margin: 0; font-size: 75px'>" + resultsAdjusted + "</h1><br>";
                                 document.getElementsByClassName('knnTrialResults')[0].innerHTML = table;
                                 if (knnChart == null) {
                                     console.log(knnChart);
-                                    document.getElementsByClassName('knnResults')[0].innerHTML += "<div style='background-color: white; border-radius: 4px'><canvas id='knnChart' style='color: #fff; width: 50%' width='400' height='400'><\/canvas><\/div>";
+                                    document.getElementsByClassName('knnResults')[0].innerHTML += "<div style='background-color: white; border-radius: 4px'><canvas id='knnChart' style='color: #fff; width: 50%' width='400' height='400'></canvas></div>";
                                     developChartKNN("knnChart", knnArrayAvg, sampleSize);
                                 }
                                 else {
@@ -727,13 +729,13 @@
                                 var table = composeTable(cnnArrayAvg, trialSampleSize);
 
                                 cnnArrayAvg = finalizeAvg(cnnArrayAvg);
-                                document.getElementsByClassName('cnnResultsRight')[0].innerHTML = "<h6 style='color: white; margin: 0'>CNN Definite Accuracy:<\/h6><h1 style='color: white; margin: 0; font-size: 75px'>" + results + "<\/h1 ><br/>" + "<h6 style='color: white; margin: 0'>CNN Buffered Accuracy:<\/h6><h1 style='color: white; margin: 0; font-size: 75px'>" + resultsAdjusted + "<\/h1><br/>";
+                                document.getElementsByClassName('cnnResultsRight')[0].innerHTML = "<h6 style='color: white; margin: 0'>CNN Definite Accuracy:</h6><h1 style='color: white; margin: 0; font-size: 75px'>" + results + "</h1 ><br>" + "<h6 style='color: white; margin: 0'>CNN Buffered Accuracy:</h6><h1 style='color: white; margin: 0; font-size: 75px'>" + resultsAdjusted + "</h1><br>";
                                 document.getElementsByClassName('cnnTrialResults')[0].innerHTML = table;
 
                                 
                                 if (cnnChart == null) {
-                                    document.getElementsByClassName('cnnResults')[0].innerHTML += "<div style='background-color: white; border-radius: 4px'><canvas id='cnnChart' style='color: #fff; width: 50%' width='400' height='400'><\/canvas><\/div>";
-                                    document.getElementsByClassName('trialResults')[0].innerHTML = "<div style='background-color: white; border-radius: 4px'><canvas id='lineChart' style='color: #fff; width: 50%' width='800' height='400'><\/canvas><\/div>";
+                                    document.getElementsByClassName('cnnResults')[0].innerHTML += "<div style='background-color: white; border-radius: 4px'><canvas id='cnnChart' style='color: #fff; width: 50%' width='400' height='400'></canvas></div>";
+                                    document.getElementsByClassName('trialResults')[0].innerHTML = "<div style='background-color: white; border-radius: 4px'><canvas id='lineChart' style='color: #fff; width: 50%' width='800' height='400'></canvas></div>";
                                     developChartLine("lineChart", knnResult, results, sampleSize);
 
                                     developChartCNN("cnnChart", cnnArrayAvg, sampleSize);
@@ -766,56 +768,28 @@
         <div id="content" style=" height: 100%; width: 100%;  display: flex; flex-direction: row;">
             <div class="column" style="width: 50%; padding:5px;">
                 <h3 style="color: white">Testing Constraints:</h3>
-                <div id="bar">
-<span>KNN Model (.json)</span> <div> <input class="model" type="file" id="files" name="files">
-</div>
-</div>
-                <div id="bar">
-<span>CNN Model (.json)</span> <div> <input class="model" type="file" id="files" name="files" multiple>
-</div>
-</div>
-                <div id="bar">
-<span>Sample Size of Training Group (# of Images)</span> <div> <input type="number" id="quantity" name="quantity" min="1" max="100000">
-</div>
-</div>
-                <div id="bar">
-<span>Random Sample Size per Individual Trial Group (# of Images)</span> <div> <input type="number" id="trial-quantity" name="quantity" min="1" max="100000">
-</div>
-</div>
+                <div id="bar" ><span>KNN Model (.json)</span> <div> <input class="model" type="file" id="files" name="files"/></div></div>
+                <div id="bar"><span>CNN Model (.json)</span> <div> <input class="model" type="file" id="files" name="files" multiple/></div></div>
+                <div id="bar" ><span>Sample Size of Training Group (# of Images)</span> <div> <input type="number" id="quantity" name="quantity" min="1" max="100000"></div></div>
+                <div id="bar" ><span>Random Sample Size per Individual Trial Group (# of Images)</span> <div> <input type="number" id="trial-quantity" name="quantity" min="1" max="100000"></div></div>
                 <h3 style="color: white">Testing Samples:</h3>
-                <div id="bar">
-<span>No Present Diabetic Retinopathy</span> <div> <input class="bar" type="file" id="files" name="files" multiple>
-</div>
-</div>
-                <div id="bar">
-<span>Mild Diabetic Retinopathy</span> <div> <input class="bar" type="file" id="files" name="files" multiple>
-</div>
-</div>
-                <div id="bar">
-<span>Moderate Diabetic Retinopathy</span> <div> <input class="bar" type="file" id="files" name="files" multiple>
-</div>
-</div>
-                <div id="bar">
-<span>Severe Diabetic Retinopathy</span> <div><input class="bar" type="file" id="files" name="files" multiple></div>
-</div>
-                <div id="bar">
-<span>Proliferative Diabetic Retinopathy</span> <div> <input class="bar" type="file" id="files" name="files" multiple>
-</div>
-</div>
+                <div id="bar" ><span>No Present Diabetic Retinopathy</span> <div> <input class="bar" type="file" id="files" name="files" multiple/></div></div>
+                <div id="bar" ><span>Mild Diabetic Retinopathy</span> <div> <input class="bar" type="file" id="files" name="files" multiple/></div></div>
+                <div id="bar" ><span>Moderate Diabetic Retinopathy</span> <div> <input class="bar" type="file" id="files" name="files" multiple/></div></div>
+                <div id="bar" ><span>Severe Diabetic Retinopathy</span> <div><input class="bar" type="file" id="files" name="files" multiple/></div></div>
+                <div id="bar" ><span>Proliferative Diabetic Retinopathy</span> <div> <input class="bar" type="file" id="files" name="files" multiple/></div></div>
                 <h3 style="color: white">Testing Trial Results:</h3>
-                <h5 style="color: white; margin-bottom: 10px">KNN Trial Accuracy Results:
-                <div id="bar" class="knnTrialResults" style="display: flex; justify-content: center; align-items: center; padding-top: 10px; padding-bottom: 10px">
+                <h5 style="color: white">KNN Trial Accuracy Results:</h3>
+                <div id="bar" class="knnTrialResults" style="display: flex; justify-content: center; align-items: center; padding-top: 10px; padding-bottom: 10px" >
                     <span>KNN Trial Accuracy Results: N/A</span>
                 </div>
-                <h5 style="color: white; margin-bottom: 10px">CNN Trial Accuracy Results:
+                <h5 style="color: white">CNN Trial Accuracy Results:</h3>
 
-                <div id="bar" class="cnnTrialResults" style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding-top: 10px; padding-bottom: 10px">
+                <div id="bar" class="cnnTrialResults" style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding-top: 10px; padding-bottom: 10px" >
                     <span>CNN Trial Accuracy Results: N/A</span>
                 </div>
 
-            </h5>
-</h5>
-</div>
+            </div>
 
 
 
@@ -825,14 +799,12 @@
                 <div id="bar" style=" align-items: flex-start; width: 100%; flex-direction: column;">
                     <div id="inner" style="padding-right: 20px;padding-left: 20px; width: 100%; align-items: flex-start;flex-direction: column;">
                         <h3 style="color: white">Neural Network Testing Process:</h3>
-                        <h6 style="color: white; flex-direction: row;">K-Nearest Neighbors Testing (KNN): <span id="percentage-1" style="background: #121212; display: inline-flex; width: auto; padding: 7px; margin-left: 10px; border-radius: 10px; font-size: 9px">0/0</span>
-</h6>
+                        <h6 style="color: white; flex-direction: row;">K-Nearest Neighbors Testing (KNN): <span id="percentage-1" style="background: #121212; display: inline-flex; width: auto; padding: 7px; margin-left: 10px; border-radius: 10px; font-size: 9px">0/0</span></h6>
                         <div style="height: 10px; border-radius: 10px; margin-bottom: 20px; width: calc(100% - 40px); overflow: hidden; background: #111111">
                             <div id="loading-1" style="background-color: #00d6a1; border-radius: 10px; height: 10px; width: 00%"></div>
                         </div>
 
-                        <h6 style="color: white; flex-direction: row;">Convolutional Neural Network Testing (CNN): <span id="percentage-2" style="background: #121212; display: inline-flex; width: auto; padding: 7px; margin-left: 10px; border-radius: 10px; font-size: 9px">0/0</span>
-</h6>
+                        <h6 style="color: white; flex-direction: row;">Convolutional Neural Network Testing (CNN): <span id="percentage-2" style="background: #121212; display: inline-flex; width: auto; padding: 7px; margin-left: 10px; border-radius: 10px; font-size: 9px">0/0</span></h6>
                         <div style="height: 10px; border-radius: 10px; margin-bottom: 20px; width: calc(100% - 40px); overflow: hidden; background: #111111">
                             <div id="loading-2" style="background-color: #00d6a1; border-radius: 10px; height: 10px; width: 0%"></div>
                         </div>
@@ -847,14 +819,14 @@
 
 
                 <h3 style="color: white">Individual Algorithmic Analysis:</h3>
-                <div id="bar" class="knnResults"><div class="knnResultsRight" style="flex-direction: column;width: 50%; display: flex; justify-content: center; align-items: center; text-align: center; color: white !important"><span>KNN Graphical Analysis: N/A</span></div></div>
-                <div id="bar" class="cnnResults"><div class="cnnResultsRight" style="flex-direction: column;width: 50%; display: flex; justify-content: center; align-items: center; text-align: center; color: white !important"><span>CNN Graphical Analysis: N/A</span></div></div>
+                <div id="bar" class="knnResults"><div  class="knnResultsRight" style='flex-direction: column;width: 50%; display: flex; justify-content: center; align-items: center; text-align: center; color: white !important'><span>KNN Graphical Analysis: N/A</span></div></div>
+                <div id="bar" class="cnnResults"><div  class="cnnResultsRight" style='flex-direction: column;width: 50%; display: flex; justify-content: center; align-items: center; text-align: center; color: white !important'><span>CNN Graphical Analysis: N/A</span></div></div>
                 <h3 style="color: white">Comparative Analysis:</h3>
                 <div id="bar" class="trialResults"><span>Comparative Analysis: N/A</span></div>
 
 
                 
-                <img id="preview" width="250px">
+                <img id="preview" width="250px"></img>
                 
             </div>
         </div>
