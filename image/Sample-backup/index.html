@@ -79,6 +79,7 @@
                 
 
             }
+            
 
             function goClassify() {
                 const logits = features.infer(video);
@@ -357,7 +358,7 @@
                             cnn.normalizeData();
                             cnn.train(
                             {
-                                epochs: 50,
+                                epochs: 500,
                             },
                             () => {
                                 p2.innerHTML = "FINISHED";

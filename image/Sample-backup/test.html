@@ -56,8 +56,11 @@
 
         var knnChart = null;
         var cnnChart = null;
+        var knnChartDL = null;
+        var cnnChartDL = null;
 
         var lineChart = null;
+        var lineChartDL = null;
 
         function test() {
 
@@ -138,6 +141,13 @@
             }
             function namedColorOpac(index) {
                 return NAMED_COLORS_OPAC[index % NAMED_COLORS_OPAC.length];
+            }
+
+            function downloadGraph(name, graph) {
+                var link = document.createElement('a');
+                link.href = graph.toBase64Image();
+                link.download = name;
+                link.click();
             }
 
 
@@ -299,6 +309,121 @@
                         }
                     },
                 });
+                const ctx2 = document.getElementById(name + "DL").getContext('2d');
+                knnChartDL = new Chart(ctx2, {
+                    type: 'radar',
+                    data: {
+                        labels: [
+                            'No Present DR',
+                            'Mild DR',
+                            'Moderate DR',
+                            'Severe DR',
+                            'Proliferative DR',
+                        ],
+                        datasets: [{
+                            label: 'Sample Size [n=' + '125' + ']',
+                            data: [0.31,0.216,0.128,0.16,0.204],
+                            fill: true,
+                            borderColor: 'rgb(255, 99, 132)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointBorderColor: '#fff',
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointHoverBorderColor: 'rgb(255, 99, 132)'
+                        },
+                        {
+                            label: 'Sample Size [n=' + '250' + ']',
+                            data: [0.336,0.244,0.164,0.176,0.12],
+                            fill: true,
+                            borderColor: namedColor(1),
+                            backgroundColor: namedColorOpac(1),
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointBorderColor: '#fff',
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointHoverBorderColor: 'rgb(255, 99, 132)'
+                        },
+                        {
+                            label: 'Sample Size [n=' + '375' + ']',
+                            data: [0.368,0.248,0.196,0.156,0.124],
+                            fill: true,
+                            borderColor: namedColor(2),
+                            backgroundColor: namedColorOpac(2),
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointBorderColor: '#fff',
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointHoverBorderColor: 'rgb(255, 99, 132)'
+                        },
+                        {
+                            label: 'Sample Size [n=' + '500' + ']',
+                            data: [0.364,0.292,0.176,0.148,0.136],
+                            fill: true,
+                            borderColor: namedColor(3),
+                            backgroundColor: namedColorOpac(3),
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointBorderColor: '#fff',
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointHoverBorderColor: 'rgb(255, 99, 132)'
+                        },
+                        {
+                            label: 'Sample Size [n=' + '1000' + ']',
+                            data: [0.38,0.324,0.176,0.164,0.19],
+                            fill: true,
+                            borderColor: namedColor(4),
+                            backgroundColor: namedColorOpac(4),
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointBorderColor: '#fff',
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointHoverBorderColor: 'rgb(255, 99, 132)'
+                        },
+                        {
+                            label: 'Sample Size [n=' + '1500' + ']',
+                            data: [0.416,0.272,0.184,0.16,0.228],
+                            fill: true,
+                            borderColor: namedColor(5),
+                            backgroundColor: namedColorOpac(5),
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointBorderColor: '#fff',
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointHoverBorderColor: 'rgb(255, 99, 132)'
+                        },
+                        {
+                            label: 'Sample Size [n=' + '2000' + ']',
+                            data: [0.372,0.316,0.188,0.162,0.228],
+                            fill: true,
+                            borderColor: namedColor(6),
+                            backgroundColor: namedColorOpac(6),
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointBorderColor: '#fff',
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointHoverBorderColor: 'rgb(255, 99, 132)'
+                        },
+                        {
+                            label: 'Sample Size [n=' + '2500' + ']',
+                            data: [0.388,0.332,0.204,0.152,0.256],
+                            fill: true,
+                            borderColor: namedColor(7),
+                            backgroundColor: namedColorOpac(7),
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointBorderColor: '#fff',
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointHoverBorderColor: 'rgb(255, 99, 132)'
+                        },
+                        
+                    ]
+                    },
+                    options: {
+                        elements: {
+                            line: {
+                                borderWidth: 3
+                            }
+                        },
+                        scales: {
+                            r: {
+                                suggestedMin: 0,
+                            }
+                        }
+                    },
+                });
             }
 
             function developChartCNN(name, data, sampleSize) {
@@ -338,6 +463,119 @@
                         }
                     },
                 });
+                const ctx2 = document.getElementById(name + "DL").getContext('2d');
+                cnnChartDL = new Chart(ctx2, {
+                    type: 'radar',
+                    data: {
+                        labels: [
+                            'No Present DR',
+                            'Mild DR',
+                            'Moderate DR',
+                            'Severe DR',
+                            'Proliferative DR',
+                        ],
+                        datasets: [{
+                            label: 'Sample Size [n=' + '125' + ']',
+                            data: [0.182,0.246,0.22,0.18,0.14],
+                            fill: true,
+                            borderColor: 'rgb(255, 99, 132)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointBorderColor: '#fff',
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointHoverBorderColor: 'rgb(255, 99, 132)'
+                        },
+                        {
+                            label: 'Sample Size [n=' + '250' + ']',
+                            data: [0.224,0.252,0.24,0.204,0.084],
+                            fill: true,
+                            borderColor: namedColor(1),
+                            backgroundColor: namedColorOpac(1),
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointBorderColor: '#fff',
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointHoverBorderColor: 'rgb(255, 99, 132)'
+                        },
+                        {
+                            label: 'Sample Size [n=' + '375' + ']',
+                            data: [0.3032380952,0.2575238095,0.2226666667,0.2131428571,0.1201904762],
+                            fill: true,
+                            borderColor: namedColor(2),
+                            backgroundColor: namedColorOpac(2),
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointBorderColor: '#fff',
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointHoverBorderColor: 'rgb(255, 99, 132)'
+                        },
+                        {
+                            label: 'Sample Size [n=' + '500' + ']',
+                            data: [0.232,0.268,0.252,0.276,0.116],
+                            fill: true,
+                            borderColor: namedColor(3),
+                            backgroundColor: namedColorOpac(3),
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointBorderColor: '#fff',
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointHoverBorderColor: 'rgb(255, 99, 132)'
+                        },
+                        {
+                            label: 'Sample Size [n=' + '1000' + ']',
+                            data: [0.244,0.308,0.284,0.276,0.168],
+                            fill: true,
+                            borderColor: namedColor(4),
+                            backgroundColor: namedColorOpac(4),
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointBorderColor: '#fff',
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointHoverBorderColor: 'rgb(255, 99, 132)'
+                        },
+                        {
+                            label: 'Sample Size [n=' + '1500' + ']',
+                            data: [0.268,0.312,0.316,0.32,0.236],
+                            fill: true,
+                            borderColor: namedColor(5),
+                            backgroundColor: namedColorOpac(5),
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointBorderColor: '#fff',
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointHoverBorderColor: 'rgb(255, 99, 132)'
+                        },
+                        {
+                            label: 'Sample Size [n=' + '2000' + ']',
+                            data: [0.288,0.364,0.316,0.32,0.244],
+                            fill: true,
+                            borderColor: namedColor(6),
+                            backgroundColor: namedColorOpac(6),
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointBorderColor: '#fff',
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointHoverBorderColor: 'rgb(255, 99, 132)'
+                        },
+                        {
+                            label: 'Sample Size [n=' + '2500' + ']',
+                            data: [0.3651428571,0.362,0.3244761905,0.3205714286,0.2693333333],
+                            fill: true,
+                            borderColor: namedColor(7),
+                            backgroundColor: namedColorOpac(7),
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointBorderColor: '#fff',
+                            pointBackgroundColor: 'rgb(255, 99, 132)',
+                            pointHoverBorderColor: 'rgb(255, 99, 132)'
+                        },]
+                    },
+                    options: {
+                        elements: {
+                            line: {
+                                borderWidth: 3
+                            }
+                        },
+                        scales: {
+                            r: {
+                                suggestedMin: 0,
+                            }
+                        }
+                    },
+                });
             }
 
             function developChartLine(name, knn, cnn, sampleSize) {
@@ -352,8 +590,8 @@
                                 y: knn
                             }],
                             showLine: true,
-                            backgroundColor: namedColorOpac(1),
-                            borderColor: namedColor(1),
+                            backgroundColor: 'rgb(255, 99, 132,0.5)',
+                            borderColor: 'rgb(255, 99, 132)',
                         },
                         {
                             label: 'CNN Mean Accuracy',
@@ -361,6 +599,111 @@
                                 x: sampleSize,
                                 y: cnn
                             }],
+                            showLine: true,
+                            backgroundColor: namedColorOpac(1),
+                            borderColor: namedColor(1),
+                        }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Mean Accuracy v.s. Training Sample Size'
+                            }
+                        },
+                        scales: {
+                            xAxes: [{
+                                ticks: {
+                                    suggestedMin: '0',
+                                },
+                            }]
+                        }
+                    }
+                });
+                const ctx2 = document.getElementById(name + "DL").getContext('2d');
+                lineChartDL = new Chart(ctx2, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            label: 'KNN Mean Accuracy',
+                            data: [{
+                                x: 125,
+                                y: 0.5
+                            },
+                            {
+                                x: 250,
+                                y: 0.54
+                            },
+                            {
+                                x: 375,
+                                y: 0.545
+                            },
+                            {
+                                x: 500,
+                                y: 0.5456
+                            },
+                            {
+                                x: 1000,
+                                y: 0.55
+                            },
+                            {
+                                x: 1500,
+                                y: 0.56
+                            },
+                            {
+                                x: 2000,
+                                y: 0.562222
+                            },
+                            {
+                                x: 2500,
+                                y: 0.567884
+                            },
+                        
+                        ],
+                            showLine: true,
+                            backgroundColor: namedColorOpac(1),
+                            borderColor: namedColor(1),
+                        },
+                        {
+                            label: 'CNN Mean Accuracy',
+                            data: [{
+                                x: 125,
+                                y: 0.48
+                            },
+                            {
+                                x: 250,
+                                y: 0.52
+                            },
+                            {
+                                x: 375,
+                                y: 0.56
+                            },
+                            {
+                                x: 500,
+                                y: 0.5644
+                            },
+                            {
+                                x: 1000,
+                                y: 0.58
+                            },
+                            {
+                                x: 1500,
+                                y: 0.59
+                            },
+                            {
+                                x: 2000,
+                                y: 0.6222
+                            },
+                            {
+                                x: 2500,
+                                y: 0.63333
+                            },
+                        ],
                             showLine: true,
                             backgroundColor: namedColorOpac(2),
                             borderColor: namedColor(2),
@@ -399,6 +742,8 @@
                 };
                 knnChart.data.datasets.push(newDataset);
                 knnChart.update();
+                knnChartDL.data.datasets.push(newDataset);
+                knnChartDL.update();
             }
 
             function updateChartCNN(data, sampleSize) {
@@ -412,6 +757,8 @@
                 };
                 cnnChart.data.datasets.push(newDataset);
                 cnnChart.update();
+                cnnChartDL.data.datasets.push(newDataset);
+                cnnChartDL.update();
             }
 
             function updateChartLine(knn, cnn, sampleSize) {
@@ -426,6 +773,9 @@
                 lineChart.data.datasets[0].data.push(newDatasetKNN);
                 lineChart.data.datasets[1].data.push(newDatasetCNN);
                 lineChart.update();
+                lineChartDL.data.datasets[0].data.push(newDatasetKNN);
+                lineChartDL.data.datasets[1].data.push(newDatasetCNN);
+                lineChartDL.update();
             }
 
             function run() {
@@ -601,6 +951,9 @@
                                 if (knnChart == null) {
                                     console.log(knnChart);
                                     document.getElementsByClassName('knnResults')[0].innerHTML += "<div style='background-color: white; border-radius: 4px'><canvas id='knnChart' style='color: #fff; width: 50%' width='400' height='400'><\/canvas><\/div>";
+                                    document.getElementsByClassName('hiddenGraphs')[0].innerHTML += "<div style='background-color: white; border-radius: 4px'><canvas id='knnChartDL' style='color: #fff; width: 50%' width='1000' height='1000'><\/canvas><\/div>";
+                                    document.getElementsByClassName('hiddenGraphs')[0].innerHTML += "<div style='background-color: white; border-radius: 4px'><canvas id='lineChartDL' style='color: #fff; width: 50%' width='1000' height='700'><\/canvas><\/div>";
+                                    document.getElementsByClassName('hiddenGraphs')[0].innerHTML += "<div style='background-color: white; border-radius: 4px'><canvas id='cnnChartDL' style='color: #fff; width: 50%' width='1000' height='1000'><\/canvas><\/div>";
                                     developChartKNN("knnChart", knnArrayAvg, sampleSize);
                                 }
                                 else {
@@ -734,9 +1087,10 @@
                                 if (cnnChart == null) {
                                     document.getElementsByClassName('cnnResults')[0].innerHTML += "<div style='background-color: white; border-radius: 4px'><canvas id='cnnChart' style='color: #fff; width: 50%' width='400' height='400'><\/canvas><\/div>";
                                     document.getElementsByClassName('trialResults')[0].innerHTML = "<div style='background-color: white; border-radius: 4px'><canvas id='lineChart' style='color: #fff; width: 50%' width='800' height='400'><\/canvas><\/div>";
-                                    developChartLine("lineChart", knnResult, results, sampleSize);
-
+                                    
+                                   
                                     developChartCNN("cnnChart", cnnArrayAvg, sampleSize);
+                                    developChartLine("lineChart", knnResult, results, sampleSize);
                                 }
                                 else {
                                     console.log(cnnArrayAvg)
@@ -757,7 +1111,7 @@
 
             }
 
-            return({run, reset})
+            return({run, reset, downloadGraph})
         }
 
         </script>
@@ -803,11 +1157,11 @@
 </div>
 </div>
                 <h3 style="color: white">Testing Trial Results:</h3>
-                <h5 style="color: white; margin-bottom: 10px">KNN Trial Accuracy Results:
+                <h5 style="color: white">KNN Trial Accuracy Results:
                 <div id="bar" class="knnTrialResults" style="display: flex; justify-content: center; align-items: center; padding-top: 10px; padding-bottom: 10px">
                     <span>KNN Trial Accuracy Results: N/A</span>
                 </div>
-                <h5 style="color: white; margin-bottom: 10px">CNN Trial Accuracy Results:
+                <h5 style="color: white">CNN Trial Accuracy Results:
 
                 <div id="bar" class="cnnTrialResults" style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding-top: 10px; padding-bottom: 10px">
                     <span>CNN Trial Accuracy Results: N/A</span>
@@ -852,11 +1206,17 @@
                 <h3 style="color: white">Comparative Analysis:</h3>
                 <div id="bar" class="trialResults"><span>Comparative Analysis: N/A</span></div>
 
+                <button onclick="test().downloadGraph('knngraph.png', knnChartDL)"></button>
+                <button onclick="test().downloadGraph('cnngraph.png', cnnChartDL)"></button>
+                <button onclick="test().downloadGraph('linegraph.png', lineChartDL)"></button>
 
-                
                 <img id="preview" width="250px">
                 
             </div>
+        </div>
+
+        <div class="hiddenGraphs" style="display: none">
+
         </div>
     </body>
 </html>
