@@ -357,7 +357,7 @@
                             cnn.normalizeData();
                             cnn.train(
                             {
-                                epochs: 50,
+                                epochs: document.getElementById("epochs").value,
                             },
                             () => {
                                 p2.innerHTML = "FINISHED";
@@ -405,6 +405,9 @@
                 <div id="bar">
 <span>Proliferative Diabetic Retinopathy</span> <div> <input class="bar" type="file" id="files" name="files" multiple>
 </div>
+</div>
+<div id="bar">
+    <span><input id="epochs"></span>
 </div>
             </div>
             <div class="column" style="width: 50%; padding:5px;">
