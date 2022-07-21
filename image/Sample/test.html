@@ -660,96 +660,7 @@
                 p2.innerHTML = "0/0"
 
 
-                reader.addEventListener("load", function() {
-                    var image = new Image();
-                    image.height = 64;
-                    image.width = 64;
-                    image.title  = file.name;
-                    image.src    = this.result;
-                    image.onload = () => {
-                        let inputImage = {
-                            image: image,
-                        };
-                        cnn.classify(inputImage, (err, res)=> {
-                            const numAdjust = num ;
-                            filledImagesCNN++;
-                            var percentage = filledImagesCNN/numImage * 100;
-                            var percentString = percentage + "%";
-                            var leadConfidence = 0;
-                            var leadLabel;
-                            for (var i = 0; i < res.length; i++) {
-                                var conf = res[i].confidence;
-                                if (leadConfidence < conf ) {
-                                    
-                                    leadConfidence = conf;
-                                    leadLabel = res[i].label;
-                                }
-                            }
-                            var leadConfidenceTemp = leadConfidence * 100;
-                            var leadPercent = leadConfidenceTemp.toString().substring(0,5) + "%";
-                            //document.getElementsByClassName('cnnResults')[0].innerHTML = leadLabel + " - " + leadConfidence;
-
-                            cnnArray.push(numAdjust.toString() == leadLabel);
-
-                            if (numAdjust.toString() == leadLabel) {
-                                cnnArrayAvg = distributeAvg(numAdjust, 1, cnnArrayAvg);
-                            }
-                            else {
-                                cnnArrayAvg = distributeAvg(numAdjust, 0, cnnArrayAvg);
-                            }
-
-                            if (parseInt(leadLabel) <= (numAdjust + 1) && parseInt(leadLabel) >= (numAdjust - 1)) {
-                                cnnArrayTemp.push(true);
-                            } else {
-                                cnnArrayTemp.push(false);
-                            }
-                            loading2.style.width = percentString;
-                            p2.innerHTML = filledImagesCNN + "/" + numImage;
-                            if (percentage == 100) {
-                                p2.innerHTML = "FINISHED";
-                                console.log("finished");
-                                let results = 0;
-                                let resultsAdjusted = 0;
-                                for(var i = 0; i < cnnArray.length; i++) {
-                                    if (cnnArray[i] == true) {
-                                        results += 1;
-                                    }
-                                    if (cnnArrayTemp[i] == true) {
-                                        resultsAdjusted += 1;
-                                    }
-                                    
-                                }
-                                results /= cnnArray.length;
-                                resultsAdjusted /= cnnArrayTemp.length;
-                                results = results.toString().substring(0,4)
-                                resultsAdjusted = resultsAdjusted.toString().substring(0,4)
-
-                                var table = composeTable(cnnArrayAvg, trialSampleSize);
-
-                                cnnArrayAvg = finalizeAvg(cnnArrayAvg);
-                                document.getElementsByClassName('cnnResultsRight')[0].innerHTML = "<h6 style='color: white; margin: 0'>CNN Definite Accuracy:<\/h6><h1 style='color: white; margin: 0; font-size: 75px'>" + results + "<\/h1 ><br/>" + "<h6 style='color: white; margin: 0'>CNN Buffered Accuracy:<\/h6><h1 style='color: white; margin: 0; font-size: 75px'>" + resultsAdjusted + "<\/h1><br/>";
-                                document.getElementsByClassName('cnnTrialResults')[0].innerHTML = table;
-
-                                
-                                if (cnnChart == null) {
-                                    document.getElementsByClassName('cnnResults')[0].innerHTML += "<div style='background-color: white; border-radius: 4px'><canvas id='cnnChart' style='color: #fff; width: 50%' width='400' height='400'><\/canvas><\/div>";
-                                    document.getElementsByClassName('trialResults')[0].innerHTML = "<div style='background-color: white; border-radius: 4px'><canvas id='lineChart' style='color: #fff; width: 50%' width='800' height='400'><\/canvas><\/div>";
-                                    developChartLine("lineChart", knnResult, results, sampleSize);
-
-                                    developChartCNN("cnnChart", cnnArrayAvg, sampleSize);
-                                }
-                                else {
-                                    console.log(cnnArrayAvg)
-                                    updateChartCNN(cnnArrayAvg, sampleSize);
-                                    updateChartLine(knnResult, results, sampleSize);
-                                }
-                                document.getElementById('test').innerHTML = "ADD TRIAL"
-                                document.getElementById('test').disabled = false;
-                            }
-                        })
-
-                    };
-                });
+                
 
                 reader.readAsDataURL(file);
 
@@ -802,6 +713,9 @@
 <span>Proliferative Diabetic Retinopathy</span> <div> <input class="bar" type="file" id="files" name="files" multiple>
 </div>
 </div>
+
+
+
                 <h3 style="color: white">Testing Trial Results:</h3>
                 <h5 style="color: white">KNN Trial Accuracy Results:
                 <div id="bar" class="knnTrialResults" style="display: flex; justify-content: center; align-items: center; padding-top: 10px; padding-bottom: 10px">
