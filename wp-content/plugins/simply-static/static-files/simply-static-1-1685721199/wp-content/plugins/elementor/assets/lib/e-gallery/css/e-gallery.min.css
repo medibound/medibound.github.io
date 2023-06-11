@@ -1,2 +1,0 @@
-lazyload .e-gallery-image:not(.e-gallery-image-loaded){filter:opacity(0);transform:scale(0.5)}
-

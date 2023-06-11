@@ -3,7 +3,6 @@
 namespace Nextend\SmartSlider3\Application\Admin\Layout\Block\Slider\SliderManager\Paginator;
 
 use Nextend\Framework\View\AbstractBlock;
-use Nextend\SmartSlider3\Application\Admin\Layout\Block\Forms\Button\BlockButtonIconCode;
 use Nextend\SmartSlider3\Application\Admin\Layout\Block\Forms\Button\BlockButtonPlain;
 use Nextend\SmartSlider3\Application\Admin\Layout\Block\Forms\Button\BlockButtonPlainIcon;
 use Nextend\SmartSlider3\Application\Admin\Layout\Block\Forms\FloatingMenu\BlockFloatingMenu;
@@ -103,9 +102,9 @@ class BlockPaginator extends AbstractBlock {
 
     public function displayPaginationLimiters() {
         $blockLimiter = new BlockFloatingMenu($this);
-
-        $blockButton = new BlockButtonPlain($this);
-        $blockButton->setLabel(n2_('Show') . " <span class='limitNumber'>" . $this->paginationLimit . "</span>");
+        $blockButton  = new BlockButtonPlain($this);
+        $limitText    = intval($this->paginationLimit) ? $this->paginationLimit : n2_('All');
+        $blockButton->setLabel(n2_('Show') . " <span class='limitNumber'>" . $limitText . "</span>");
         $blockButton->setIcon('ssi_16 ssi_16--selectarrow');
         $blockButton->setSmall();
         $blockLimiter->setButton($blockButton);
@@ -147,11 +146,11 @@ class BlockPaginator extends AbstractBlock {
         $actualSlidersEnd  = $actualSliderStart + $this->transformedPaginationLimit();
         $allSliders        = $this->sliderCount;
 
-        echo sprintf(n2_("Showing %s to %s of %s projects"), "<span class='n2_slider_manager__paginator_label_item__from'>" . (($actualSliderStart === 0) ? 1 : $actualSliderStart) . "</span>", "<span class='n2_slider_manager__paginator_label_item__to' > " . (($actualSlidersEnd < $this->sliderCount) ? $actualSlidersEnd : $this->sliderCount) . "</span > ", "<span class='n2_slider_manager__paginator_label_item__max' > " . $allSliders . "</span > ");
+        echo sprintf(n2_("Showing %s to %s of %s projects"), "<span class='n2_slider_manager__paginator_label_item__from'>" . (($actualSliderStart === 0) ? 1 : esc_html($actualSliderStart)) . "</span>", "<span class='n2_slider_manager__paginator_label_item__to' > " . esc_html(($actualSlidersEnd < $this->sliderCount) ? $actualSlidersEnd : $this->sliderCount) . "</span > ", "<span class='n2_slider_manager__paginator_label_item__max' > " . esc_html($allSliders) . "</span > ");
     }
 
     public function displayNoSlidersLabel() {
-        echo n2_('No projects to show');
+        n2_e('No projects to show');
     }
 
 }

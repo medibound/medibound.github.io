@@ -6,7 +6,11 @@ namespace Nextend\Framework\Asset\Fonts\Google;
 
 use Nextend\Framework\Asset\AbstractAsset;
 use Nextend\Framework\Asset\Css\Css;
+use Nextend\Framework\Cache\CacheGoogleFont;
+use Nextend\Framework\Filesystem\Filesystem;
+use Nextend\Framework\Font\FontSettings;
 use Nextend\Framework\Url\UrlHelper;
+use Nextend\SmartSlider3\SmartSlider3Info;
 
 class Asset extends AbstractAsset {
 
@@ -42,7 +46,20 @@ class Asset extends AbstractAsset {
                     'family'  => urlencode(implode('|', $families))
                 );
 
-                Css::addUrl(UrlHelper::add_query_arg($params, 'https://fonts.googleapis.com/css'));
+                $url = UrlHelper::add_query_arg($params, 'https://fonts.googleapis.com/css');
+
+                $fontSettings = FontSettings::getPluginsData();
+                if ($fontSettings->get('google-cache', 0)) {
+                    $cache = new CacheGoogleFont();
+
+                    $path = $cache->makeCache($url, 'css');
+
+                    if ($path) {
+                        $url = Filesystem::pathToAbsoluteURL($path) . '?ver=' . SmartSlider3Info::$revisionShort;
+                    }
+                }
+
+                Css::addUrl($url);
             }
 
         }

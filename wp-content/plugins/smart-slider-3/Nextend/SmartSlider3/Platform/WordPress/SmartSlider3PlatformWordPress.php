@@ -3,10 +3,12 @@
 namespace Nextend\SmartSlider3\Platform\WordPress;
 
 use Nextend\Framework\Asset\Predefined;
+use Nextend\Framework\Sanitize;
 use Nextend\Framework\WordPress\AssetInjector;
 use Nextend\SmartSlider3\Application\ApplicationSmartSlider3;
 use Nextend\SmartSlider3\Platform\AbstractSmartSlider3Platform;
 use Nextend\SmartSlider3\Platform\WordPress\Admin\AdminHelper;
+use Nextend\SmartSlider3\Platform\WordPress\Admin\Pro\WordPressUpdate;
 use Nextend\SmartSlider3\Platform\WordPress\Integration\ACF\ACF;
 use Nextend\SmartSlider3\Platform\WordPress\Integration\BeaverBuilder\BeaverBuilder;
 use Nextend\SmartSlider3\Platform\WordPress\Integration\BoldGrid\BoldGrid;
@@ -21,6 +23,7 @@ use Nextend\SmartSlider3\Platform\WordPress\Integration\NimbleBuilder\NimbleBuil
 use Nextend\SmartSlider3\Platform\WordPress\Integration\OxygenBuilder\OxygenBuilder;
 use Nextend\SmartSlider3\Platform\WordPress\Integration\RankMath\RankMath;
 use Nextend\SmartSlider3\Platform\WordPress\Integration\TablePress\TablePress;
+use Nextend\SmartSlider3\Platform\WordPress\Integration\TatsuBuilder\TatsuBuilder;
 use Nextend\SmartSlider3\Platform\WordPress\Integration\ThemifyBuilder\ThemifyBuilder;
 use Nextend\SmartSlider3\Platform\WordPress\Integration\Unyson\Unyson;
 use Nextend\SmartSlider3\Platform\WordPress\Integration\VisualComposer1\VisualComposer1;
@@ -29,7 +32,6 @@ use Nextend\SmartSlider3\Platform\WordPress\Integration\WPRocket\WPRocket;
 use Nextend\SmartSlider3\Platform\WordPress\Shortcode\Shortcode;
 use Nextend\SmartSlider3\Platform\WordPress\Widget\WidgetHelper;
 use Nextend\SmartSlider3\PublicApi\Project;
-use Nextend\SmartSlider3\SmartSlider3Info;
 
 class SmartSlider3PlatformWordPress extends AbstractSmartSlider3Platform {
 
@@ -57,15 +59,13 @@ class SmartSlider3PlatformWordPress extends AbstractSmartSlider3Platform {
             }
         });
 
-        if (SmartSlider3Info::$plan == 'pro' || SmartSlider3Info::$channel != 'stable') {
-            WordPressUpdate::getInstance();
-        }
-
         new WordPressFrontend();
 
         AssetInjector::getInstance();
 
         $this->integrate();
+
+        $this->initSanitize();
     }
 
     public function getAdminUrl() {
@@ -129,6 +129,12 @@ class SmartSlider3PlatformWordPress extends AbstractSmartSlider3Platform {
         new RankMath();
 
         new ThemifyBuilder();
+
+        new TatsuBuilder();
+    }
+
+    private function initSanitize() {
+        Sanitize::set_allowed_tags();
     }
 
     /**

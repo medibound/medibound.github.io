@@ -22,7 +22,7 @@ class ImageEdit {
             $imageUrl = ResourceTranslator::toUrl(ResourceTranslator::pathToResource($imageUrlOrPath));
         }
 
-        if ($targetWidth <= 0 || $targetHeight <= 0 || !function_exists('imagecreatefrompng')) {
+        if (!extension_loaded('gd') || $targetWidth <= 0 || $targetHeight <= 0) {
             return $imageUrl;
         }
 
@@ -53,7 +53,13 @@ class ImageEdit {
                 $extension = self::validateGDExtension($pathInfo['extension']);
             }
 
+            $extension = self::checkMetaExtension($originalImageUrl, $extension);
+
             if (!$extension) {
+                return $originalImageUrl;
+            }
+
+            if (strtolower($extension) === 'webp' && !function_exists('imagecreatefromwebp')) {
                 return $originalImageUrl;
             }
 
@@ -98,6 +104,9 @@ class ImageEdit {
                     $extension = 'png';
                     break;
                 case IMAGETYPE_WEBP:
+                    if (!function_exists('imagecreatefromwebp')) {
+                        return $originalImageUrl;
+                    }
                     $extension = 'webp';
                     break;
             }
@@ -176,9 +185,9 @@ class ImageEdit {
                 }
 
                 if ($originalWidth / $targetWidth > $originalHeight / $targetHeight) {
-                    $targetWidth = $originalWidth / ($originalHeight / $targetHeight);
+                    $targetWidth = round($originalWidth / ($originalHeight / $targetHeight));
                 } else {
-                    $targetHeight = $originalHeight / ($originalWidth / $targetWidth);
+                    $targetHeight = round($originalHeight / ($originalWidth / $targetWidth));
                 }
             }
             if ($rotated || $originalWidth != $targetWidth || $originalHeight != $targetHeight) {
@@ -229,7 +238,7 @@ class ImageEdit {
             $imageUrl = ResourceTranslator::toUrl($imageUrlOrPath);
         }
 
-        if ($scale <= 0 || !function_exists('imagecreatefrompng')) {
+        if (!extension_loaded('gd') || $scale <= 0) {
             return $imageUrl;
         }
 
@@ -256,7 +265,13 @@ class ImageEdit {
                 $extension = self::validateGDExtension($pathInfo['extension']);
             }
 
+            $extension = self::checkMetaExtension($imageUrl, $extension);
+
             if (!$extension) {
+                return $originalImageUrl;
+            }
+
+            if (strtolower($extension) === 'webp' && !function_exists('imagecreatefromwebp')) {
                 return $originalImageUrl;
             }
 
@@ -285,6 +300,9 @@ class ImageEdit {
                     $extension = 'png';
                     break;
                 case IMAGETYPE_WEBP:
+                    if (!function_exists('imagecreatefromwebp')) {
+                        return $originalImageUrl;
+                    }
                     $extension = 'webp';
                     break;
             }
@@ -407,12 +425,12 @@ class ImageEdit {
         $verticalRatio   = $height / $OriginalHeight;
 
         if ($horizontalRatio > $verticalRatio) {
-            $new_h = $horizontalRatio * $OriginalHeight;
-            $dst_y = ($height - $new_h) / 2 * $y / 50;
+            $new_h = round($horizontalRatio * $OriginalHeight);
+            $dst_y = round(($height - $new_h) / 2 * $y / 50);
             $dst_h = $new_h;
         } else {
-            $new_w = $verticalRatio * $originalWidth;
-            $dst_x = ($width - $new_w) / 2 * $x / 50;
+            $new_w = round($verticalRatio * $originalWidth);
+            $dst_x = round(($width - $new_w) / 2 * $x / 50);
             $dst_w = $new_w;
         }
 
@@ -515,7 +533,7 @@ class ImageEdit {
             $imageUrl = ResourceTranslator::toUrl($imageUrlOrPath);
         }
 
-        if (!function_exists('imagecreatefrompng') || ($options['mode'] === 'scale' && $options['scale'] <= 0)) {
+        if (!extension_loaded('gd') || $options['mode'] === 'scale' && $options['scale'] <= 0) {
             return Filesystem::pathToAbsoluteURL($imageUrl);
         }
 
@@ -537,14 +555,15 @@ class ImageEdit {
                 return $originalImageUrl;
             }
 
-            $pathInfo = pathinfo(parse_url($imageUrl, PHP_URL_PATH));
-
+            $pathInfo  = pathinfo(parse_url($imageUrl, PHP_URL_PATH));
             $extension = false;
             if (isset($pathInfo['extension'])) {
                 $extension = self::validateGDExtension($pathInfo['extension']);
             }
 
-            if (!$extension) {
+            $extension = self::checkMetaExtension($imageUrl, $extension);
+
+            if (!$extension || (strtolower($extension) === 'webp' && !function_exists('imagecreatefromwebp')) || !ini_get('allow_url_fopen')) {
                 return $originalImageUrl;
             }
 
@@ -568,6 +587,9 @@ class ImageEdit {
                     $extension = 'png';
                     break;
                 case IMAGETYPE_WEBP:
+                    if (!function_exists('imagecreatefromwebp')) {
+                        return $originalImageUrl;
+                    }
                     $extension = 'webp';
                     break;
             }
@@ -634,8 +656,8 @@ class ImageEdit {
             $originalHeight = imagesy($image);
             switch ($options['mode']) {
                 case 'scale':
-                    $targetWidth  = $originalWidth * $options['scale'];
-                    $targetHeight = $originalHeight * $options['scale'];
+                    $targetWidth  = round($originalWidth * $options['scale']);
+                    $targetHeight = round($originalHeight * $options['scale']);
                     break;
                 case 'resize':
                     $targetWidth  = $options['width'];
@@ -670,5 +692,18 @@ class ImageEdit {
         }
 
         throw new Exception('Unable to scale image: ' . $imagePath);
+    }
+
+    public static function checkMetaExtension($imageUrl, $originalExtension) {
+        if (strpos($imageUrl, 'dst-jpg') !== false) {
+            return 'jpg';
+        } else if (strpos($imageUrl, 'dst-png') !== false) {
+            return 'png';
+        } else if (strpos($imageUrl, 'dst-webp') !== false) {
+            return 'webp';
+        } else {
+            // not Instagram or Facebook url
+            return $originalExtension;
+        }
     }
 }

@@ -6,7 +6,9 @@ namespace Nextend\Framework\Platform\WordPress;
 
 use Nextend\Framework\Filesystem\Filesystem;
 use Nextend\Framework\Platform\AbstractPlatform;
+use Nextend\Framework\Request\Request;
 use Nextend\Framework\Url\Url;
+use Nextend\SmartSlider3\Settings;
 
 class PlatformWordPress extends AbstractPlatform {
 
@@ -58,6 +60,10 @@ class PlatformWordPress extends AbstractPlatform {
         return current_time('timestamp');
     }
 
+    public function localizeDate($date) {
+        return date_i18n(get_option('date_format'), $date);
+    }
+
     public function filterAssetsPath($assetsPath) {
 
         return str_replace(SMARTSLIDER3_LIBRARY_PATH, NEXTEND_SMARTSLIDER_3 . 'Public', $assetsPath);
@@ -101,6 +107,12 @@ class PlatformWordPress extends AbstractPlatform {
     public function getDebug() {
         $debug = array('');
 
+        $debug[] = 'get_site_url: ' . get_site_url();
+        $debug[] = 'WP_CONTENT_URL: ' . WP_CONTENT_URL;
+
+        $translateUrl = Settings::get('translate-url', '|*|');
+        $debug[]      = 'Translate url: ' . ($translateUrl == '|*|' ? 'not used' : $translateUrl);
+        $debug[]      = '';
 
         $debug[] = 'Path to uri:';
         $uris    = Url::getUris();
@@ -149,6 +161,6 @@ class PlatformWordPress extends AbstractPlatform {
     }
 
     public function isBeaverBuilderActive() {
-        return isset($_GET['fl_builder']);
+        return Request::$GET->getVar('fl_builder') !== null;
     }
 }
